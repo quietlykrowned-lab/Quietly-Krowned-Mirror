@@ -58,10 +58,11 @@ padding:14px 18px;margin-bottom:20px;display:flex;justify-content:space-between;
 
 .mood-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
 .mood-btn{
-background:transparent;border:1px solid rgba(232,224,208,0.1);
-color:var(–muted);border-radius:20px;padding:6px 14px;font-size:11px;
+background:rgba(232,224,208,0.07);border:1px solid rgba(232,224,208,0.3);
+color:rgba(232,224,208,0.8);border-radius:20px;padding:8px 16px;font-size:11px;
 font-family:‘DM Mono’,monospace;letter-spacing:.06em;transition:all .15s;
 }
+.mood-btn:hover{background:rgba(232,224,208,0.12);border-color:rgba(232,224,208,0.5)}
 
 textarea.journal{
 width:100%;background:var(–surface);border:1px solid rgba(192,160,96,0.15);
@@ -72,12 +73,14 @@ background-color:rgba(15,8,25,0.7);
 textarea.journal:focus{border-color:rgba(192,160,96,0.4)}
 
 .primary-btn{
-background:linear-gradient(135deg,rgba(155,89,182,0.3),rgba(123,79,160,0.2));
-border:1px solid rgba(192,160,96,0.35);color:var(–gold);
+background:linear-gradient(135deg,rgba(155,89,182,0.5),rgba(123,79,160,0.4));
+border:1px solid rgba(192,160,96,0.7);color:#E8C96A;
 border-radius:10px;padding:11px 26px;font-size:12px;
 letter-spacing:.12em;text-transform:uppercase;font-family:‘DM Mono’,monospace;
 display:inline-flex;align-items:center;gap:8px;transition:all .2s;
+font-weight:500;text-shadow:0 0 20px rgba(192,160,96,0.3);
 }
+.primary-btn:hover{background:linear-gradient(135deg,rgba(155,89,182,0.65),rgba(123,79,160,0.55));border-color:rgba(192,160,96,0.9)}
 .primary-btn:disabled{opacity:.35;cursor:not-allowed}
 .ghost-btn{
 background:transparent;border:1px solid rgba(192,160,96,0.15);
