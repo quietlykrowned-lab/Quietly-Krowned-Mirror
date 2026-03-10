@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
@@ -19,6 +18,21 @@ radial-gradient(ellipse 50% 60% at 85% 90%,rgba(155,89,182,0.08) 0%,transparent 
 textarea,input{outline:none;font-family:inherit;color:var(--text)}
 button{cursor:pointer}
 @keyframes spin{to{transform:rotate(360deg)}}
+@keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes slideDown{from{opacity:1;transform:translateY(0)}to{opacity:0;transform:translateY(20px)}}
+.affirmation-toast{
+position:fixed;bottom:32px;left:50%;transform:translateX(-50%);
+background:linear-gradient(135deg,rgba(60,20,90,0.97),rgba(40,15,70,0.97));
+border:1px solid rgba(192,160,96,0.5);border-radius:16px;
+padding:20px 28px;max-width:400px;width:90%;text-align:center;
+box-shadow:0 8px 40px rgba(0,0,0,0.5),0 0 60px rgba(155,89,182,0.15);
+z-index:999;animation:slideUp .4s ease forwards;
+}
+.affirmation-toast.hiding{animation:slideDown .4s ease forwards}
+.affirmation-crown{font-size:18px;margin-bottom:8px;color:var(--gold)}
+.affirmation-text{font-family:'Playfair Display',serif;font-size:15px;font-style:italic;line-height:1.6;color:var(--text)}
+.affirmation-close{margin-top:12px;font-size:9px;color:var(--muted);letter-spacing:.14em;font-family:'DM Mono',monospace;cursor:pointer;text-transform:uppercase}
+.affirmation-close:hover{color:var(--gold)}
 @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 ::-webkit-scrollbar{width:3px}
 ::-webkit-scrollbar-thumb{background:rgba(192,160,96,0.15);border-radius:2px}
@@ -284,286 +298,375 @@ font-family:‘DM Mono’,monospace;letter-spacing:.16em;
 
 <footer>QUIET POWER · DEEP AWARENESS · INTENTIONAL LIVING ♛</footer>
 
-<script>
-const SYSTEM = `You are the Mirror — the self-awareness intelligence at the heart of Quietly Krowned.
-Philosophy: Quiet power. Deep awareness. Intentional living.
-You are NOT a therapist. You are a reflective intelligence that helps users see their own patterns clearly.
-Voice: Precise, warm, psychologically grounded. Never preachy. Speak like someone who has done serious inner work.
-Use psychology, attachment theory, Jungian archetypes when relevant. Never use buzzwords shallowly.
-Tone: bell hooks meets Carl Jung meets someone who grew up watching people carefully and took notes.`;
+<div id="affirmation-toast" style="display:none"></div>
 
-const PROMPTS = [
+<script>
+var SYSTEM = "You are the Mirror, the self-awareness intelligence at the heart of Quietly Krowned. Philosophy: Quiet power. Deep awareness. Intentional living. You are NOT a therapist. You are a reflective intelligence that helps users see their own patterns clearly. Voice: Precise, warm, psychologically grounded. Never preachy. Speak like someone who has done serious inner work. Use psychology, attachment theory, Jungian archetypes when relevant. Never use buzzwords shallowly. Tone: bell hooks meets Carl Jung meets someone who grew up watching people carefully and took notes.";
+
+var AFFIRMATIONS = [
+"You are allowed to take up space, quietly and completely.",
+"The version of you that keeps going is the one worth studying.",
+"Your awareness is not a burden. It is your architecture.",
+"You are not behind. You are in the exact chapter you need to be in.",
+"Stillness is not stagnation. It is accumulation.",
+"Your 12th house work is never wasted. It feeds every house.",
+"The patterns you see in others are maps back to yourself.",
+"You do not need permission to become what you already are.",
+"Contraction is not failure. It is the body asking for truth.",
+"The quiet ones rebuild everything.",
+"Your sensitivity is not weakness. It is precision.",
+"Everything you have survived has made you harder to fool.",
+"You are not too much. You are exactly enough for the right rooms.",
+"The crown was never lost. You just forgot you were wearing it.",
+"Deep roots grow in the dark. Trust the season you are in."
+];
+
+var PROMPTS = [
 "What are you avoiding right now?",
 "Where are you shrinking to keep the peace?",
-"What truth do you know but haven't spoken?",
+"What truth do you know but have not spoken?",
 "Where are you moving quietly but effectively?",
-"What progress have you made that you haven't acknowledged?",
+"What progress have you made that you have not acknowledged?",
 "Who takes more than they give in your life right now?",
 "What version of yourself are you most afraid to become?",
 "Where does your confidence actually live?",
 "What pattern are you tired of explaining?",
-"What would you do if no one was watching?",
+"What would you do if no one was watching?"
 ];
 
-const MOODS = [
-{id:"expansive",label:"Expansive",color:"#C0A060"},
-{id:"steady",label:"Steady",color:"#9B59B6"},
+var MOODS = [
+{id:"expansive", label:"Expansive", color:"#C0A060"},
+{id:"steady", label:"Steady", color:"#9B59B6"},
 {id:"contracted",label:"Contracted",color:"#7B4FA0"},
-{id:"drained",label:"Drained",color:"#5a3870"},
-{id:"turbulent",label:"Turbulent",color:"#8B3A6A"},
+{id:"drained", label:"Drained", color:"#5a3870"},
+{id:"turbulent", label:"Turbulent", color:"#8B3A6A"}
 ];
 
-let entries = [];
-let selectedMood = null;
-let promptIdx = 0;
-let conversation = [];
+var entries = [];
+var selectedMood = null;
+var promptIdx = 0;
+var conversation = [];
 
 // Init mood buttons
-const moodRow = document.getElementById('mood-row');
-MOODS.forEach(m => {
-const btn = document.createElement('button');
-btn.className = 'mood-btn';
-btn.id = 'mood-' + m.id;
+var moodRow = document.getElementById("mood-row");
+MOODS.forEach(function(m) {
+var btn = document.createElement("button");
+btn.className = "mood-btn";
+btn.id = "mood-" + m.id;
 btn.textContent = m.label;
-btn.onclick = () => toggleMood(m.id, m.color);
+btn.onclick = function() { toggleMood(m.id, m.color); };
 moodRow.appendChild(btn);
 });
 
 function toggleMood(id, color) {
-selectedMood = selectedMood === id ? null : id;
-MOODS.forEach(m => {
-const btn = document.getElementById('mood-' + m.id);
+selectedMood = (selectedMood === id) ? null : id;
+MOODS.forEach(function(m) {
+var btn = document.getElementById("mood-" + m.id);
 if (selectedMood === m.id) {
-btn.style.background = m.color + '22';
+btn.style.background = m.color + "22";
 btn.style.borderColor = m.color;
 btn.style.color = m.color;
 } else {
-btn.style.background = 'transparent';
-btn.style.borderColor = 'rgba(232,224,208,0.1)';
-btn.style.color = 'rgba(232,224,208,0.4)';
+btn.style.background = "rgba(232,224,208,0.07)";
+btn.style.borderColor = "rgba(232,224,208,0.3)";
+btn.style.color = "rgba(232,224,208,0.8)";
 }
 });
 }
 
 function nextPrompt() {
 promptIdx = (promptIdx + 1) % PROMPTS.length;
-document.getElementById('prompt-text').textContent = '"' + PROMPTS[promptIdx] + '"';
+document.getElementById("prompt-text").textContent = '"' + PROMPTS[promptIdx] + '"';
 }
 
 function saveEntry() {
-const text = document.getElementById('journal-input').value.trim();
+var text = document.getElementById("journal-input").value.trim();
 if (!text) return;
-const now = new Date();
-const entry = {
+var now = new Date();
+var entry = {
 id: Date.now(),
-text,
+text: text,
 mood: selectedMood,
 date: now.toISOString(),
-dateLabel: now.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}),
+dateLabel: now.toLocaleDateString("en-US", {month:"short", day:"numeric", year:"numeric"})
 };
 entries.push(entry);
-document.getElementById('journal-input').value = '';
+document.getElementById("journal-input").value = "";
 selectedMood = null;
-MOODS.forEach(m => toggleMood(null, m.color));
+MOODS.forEach(function(m) { toggleMood(null, m.color); });
 promptIdx = Math.floor(Math.random() * PROMPTS.length);
 nextPrompt();
 updateStats();
 renderPastEntries();
 renderEnergyBars();
 renderEnergyLog();
+showAffirmation("wrote in their journal and chose to look inward");
 }
 
 function updateStats() {
-document.getElementById('entry-count').textContent = entries.length;
-const days = new Set(entries.map(e => new Date(e.date).toDateString())).size;
-document.getElementById('day-count').textContent = days;
-document.getElementById('mirror-count').textContent = entries.length + ' ' + (entries.length===1?'entry':'entries') + ' in memory';
+document.getElementById("entry-count").textContent = entries.length;
+var days = new Set(entries.map(function(e) { return new Date(e.date).toDateString(); })).size;
+document.getElementById("day-count").textContent = days;
+document.getElementById("mirror-count").textContent = entries.length + " " + (entries.length === 1 ? "entry" : "entries") + " in memory";
 }
 
 function renderPastEntries() {
-const wrap = document.getElementById('past-entries');
-if (!entries.length) { wrap.innerHTML = ''; return; }
-const recent = [...entries].reverse().slice(0,5);
-wrap.innerHTML = '<div class="field-label">Past Entries — ' + entries.length + ' logged</div>' +
-recent.map(e => {
-const mood = MOODS.find(m => m.id === e.mood);
-return `<div class="entry-card">
-<div class="entry-meta">
-<span class="entry-date">${e.dateLabel}</span>
-${mood ? `<span class="entry-mood-tag">${mood.label}</span>` : ''}
-</div>
-<div class="entry-preview">${e.text}</div>
-</div>`;
-}).join('');
+var wrap = document.getElementById("past-entries");
+if (!entries.length) { wrap.innerHTML = ""; return; }
+var recent = entries.slice().reverse().slice(0, 5);
+var html = '<div class="field-label">Past Entries &mdash; ' + entries.length + " logged</div>";
+recent.forEach(function(e) {
+var mood = MOODS.find(function(m) { return m.id === e.mood; });
+html += '<div class="entry-card">';
+html += '<div class="entry-meta">';
+html += '<span class="entry-date">' + e.dateLabel + "</span>";
+if (mood) html += '<span class="entry-mood-tag">' + mood.label + "</span>";
+html += "</div>";
+html += '<div class="entry-preview">' + e.text + "</div>";
+html += "</div>";
+});
+wrap.innerHTML = html;
 }
 
 function renderEnergyBars() {
-const moodEntries = entries.filter(e => e.mood);
-const bars = document.getElementById('energy-bars');
+var moodEntries = entries.filter(function(e) { return e.mood; });
+var bars = document.getElementById("energy-bars");
 if (!moodEntries.length) {
 bars.innerHTML = '<div class="empty-state">Log energy states in your journal entries to build your map.</div>';
 return;
 }
-const counts = {};
-MOODS.forEach(m => counts[m.id] = moodEntries.filter(e => e.mood === m.id).length);
-const max = Math.max(...Object.values(counts), 1);
-bars.innerHTML = MOODS.map(m => {
-const pct = (counts[m.id] / max) * 100;
-return `<div class="bar-row">
-<div class="bar-label" style="color:${m.color}">${m.label}</div>
-<div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:linear-gradient(90deg,${m.color}88,${m.color})"></div></div>
-<div class="bar-count">${counts[m.id]}</div>
-</div>`;
-}).join('');
+var counts = {};
+MOODS.forEach(function(m) {
+counts[m.id] = moodEntries.filter(function(e) { return e.mood === m.id; }).length;
+});
+var max = Math.max.apply(null, Object.values(counts).concat([1]));
+var html = "";
+MOODS.forEach(function(m) {
+var pct = (counts[m.id] / max) * 100;
+html += '<div class="bar-row">';
+html += '<div class="bar-label" style="color:' + m.color + '">' + m.label + "</div>";
+html += '<div class="bar-track"><div class="bar-fill" style="width:' + pct + '%;background:linear-gradient(90deg,' + m.color + "88," + m.color + ')"></div></div>';
+html += '<div class="bar-count">' + counts[m.id] + "</div>";
+html += "</div>";
+});
+bars.innerHTML = html;
 }
 
 function renderEnergyLog() {
-const moodEntries = entries.filter(e => e.mood);
-const wrap = document.getElementById('energy-log-wrap');
-if (!moodEntries.length) { wrap.innerHTML = ''; return; }
-const recent = [...moodEntries].reverse().slice(0,7);
-wrap.innerHTML = '<div class="field-label">Recent Energy Log</div><div class="energy-log">' +
-recent.map(e => {
-const m = MOODS.find(s => s.id === e.mood);
-return `<div class="energy-log-item">
-<div class="energy-dot" style="background:${m.color}"></div>
-<span class="energy-date">${e.dateLabel}</span>
-<span class="energy-state-label" style="color:${m.color}">${m.label}</span>
-<span class="energy-excerpt">${e.text.slice(0,60)}...</span>
-</div>`;
-}).join('') + '</div>';
+var moodEntries = entries.filter(function(e) { return e.mood; });
+var wrap = document.getElementById("energy-log-wrap");
+if (!moodEntries.length) { wrap.innerHTML = ""; return; }
+var recent = moodEntries.slice().reverse().slice(0, 7);
+var html = '<div class="field-label">Recent Energy Log</div><div class="energy-log">';
+recent.forEach(function(e) {
+var m = MOODS.find(function(s) { return s.id === e.mood; });
+html += '<div class="energy-log-item">';
+html += '<div class="energy-dot" style="background:' + m.color + '"></div>';
+html += '<span class="energy-date">' + e.dateLabel + "</span>";
+html += '<span class="energy-state-label" style="color:' + m.color + '">' + m.label + "</span>";
+html += '<span class="energy-excerpt">' + e.text.slice(0, 60) + "...</span>";
+html += "</div>";
+});
+html += "</div>";
+wrap.innerHTML = html;
 }
 
 function switchTab(id) {
-document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-document.getElementById('tab-' + id).classList.add('active');
-event.target.classList.add('active');
+document.querySelectorAll(".tab-content").forEach(function(t) { t.classList.remove("active"); });
+document.querySelectorAll(".tab-btn").forEach(function(b) { b.classList.remove("active"); });
+document.getElementById("tab-" + id).classList.add("active");
+event.target.classList.add("active");
 }
 
-async function callMirror(messages, extra='') {
-const res = await fetch('https://api.anthropic.com/v1/messages', {
-method:'POST',
-headers:{'Content-Type':'application/json'},
-body: JSON.stringify({
-model:'claude-sonnet-4-20250514',
-max_tokens:1000,
-system: SYSTEM + (extra ? '\n\n'+extra : ''),
-messages,
-})
+function callMirror(messages, extra) {
+var body = {
+model: "claude-sonnet-4-20250514",
+max_tokens: 1000,
+system: SYSTEM + (extra ? "\n\n" + extra : ""),
+messages: messages
+};
+return fetch("https://api.anthropic.com/v1/messages", {
+method: "POST",
+headers: {"Content-Type": "application/json"},
+body: JSON.stringify(body)
+}).then(function(res) {
+return res.json();
+}).then(function(d) {
+return d.content ? d.content.map(function(b) { return b.text || ""; }).join("") : "";
 });
-const d = await res.json();
-return d.content?.map(b=>b.text||'').join('') || '';
 }
 
-async function runAnalysis() {
+function showAffirmation(context) {
+var toast = document.getElementById("affirmation-toast");
+var fallback = AFFIRMATIONS[Math.floor(Math.random() * AFFIRMATIONS.length)];
+toast.style.display = "block";
+toast.className = "affirmation-toast";
+toast.innerHTML = '<div class="affirmation-crown">&#9819;</div><div class="affirmation-text" id="affirmation-msg">...</div><div class="affirmation-close" onclick="closeAffirmation()">tap to close</div>';
+
+var prompt = "Write one short affirmation (1-2 sentences, max 25 words) for someone who just " + context + ". Astrology meets psychology tone. Grounded, poetic, empowering. No cliches. Quiet power energy. Return only the affirmation, no quotes, no preamble.";
+
+fetch("https://api.anthropic.com/v1/messages", {
+method: "POST",
+headers: {"Content-Type": "application/json"},
+body: JSON.stringify({
+model: "claude-sonnet-4-20250514",
+max_tokens: 80,
+messages: [{role: "user", content: prompt}]
+})
+}).then(function(res) {
+return res.json();
+}).then(function(data) {
+var msg = (data.content && data.content[0] && data.content[0].text) ? data.content[0].text.trim() : fallback;
+var el = document.getElementById("affirmation-msg");
+if (el) el.textContent = msg;
+}).catch(function() {
+var el = document.getElementById("affirmation-msg");
+if (el) el.textContent = fallback;
+});
+
+clearTimeout(window._affTimer);
+window._affTimer = setTimeout(closeAffirmation, 7000);
+}
+
+function closeAffirmation() {
+var toast = document.getElementById("affirmation-toast");
+toast.classList.add("hiding");
+setTimeout(function() {
+toast.style.display = "none";
+toast.classList.remove("hiding");
+}, 400);
+}
+
+function runAnalysis() {
 if (!entries.length) return;
-const btn = document.getElementById('analysis-btn');
-const out = document.getElementById('insight-output');
+var btn = document.getElementById("analysis-btn");
+var out = document.getElementById("insight-output");
 btn.disabled = true;
 btn.innerHTML = '<span class="spinner"></span> Reading...';
-out.className = '';
-out.innerHTML = '<div style="display:flex;align-items:center;gap:10px;color:rgba(232,224,208,0.4)"><span class="spinner"></span><span style="font-size:11px;font-family:\'DM Mono\',monospace;letter-spacing:.1em">THE MIRROR IS READING...</span></div>';
+out.className = "";
+out.innerHTML = '<div style="display:flex;align-items:center;gap:10px;color:rgba(232,224,208,0.4)"><span class="spinner"></span><span style="font-size:11px;letter-spacing:.1em">THE MIRROR IS READING...</span></div>';
 
-const entryText = entries.slice(-10).map((e,i) =>
-`Entry ${i+1} (${e.dateLabel}${e.mood?', feeling '+e.mood:''}): ${e.text}`
-).join('\n\n---\n\n');
+var entryText = entries.slice(-10).map(function(e, i) {
+return "Entry " + (i+1) + " (" + e.dateLabel + (e.mood ? ", feeling " + e.mood : "") + "): " + e.text;
+}).join("\n\n---\n\n");
 
-const result = await callMirror([{role:'user',content:`Analyze these journal entries:\n\n${entryText}\n\nGive a Mirror Analysis: 1) ONE key pattern (specific), 2) ONE emotional tone observation, 3) ONE insight about what's underneath the surface, 4) ONE precise reflection question to close. Under 300 words. Be a mirror, not a cheerleader.`}]);
-
-out.className = 'insight-text';
+callMirror([{role:"user", content:"Analyze these journal entries:\n\n" + entryText + "\n\nGive a Mirror Analysis: 1) ONE key pattern (specific), 2) ONE emotional tone observation, 3) ONE insight about what is underneath the surface, 4) ONE precise reflection question to close. Under 300 words. Be a mirror, not a cheerleader."}]).then(function(result) {
+out.className = "insight-text";
 out.textContent = result;
 btn.disabled = false;
-btn.innerHTML = 'Run Analysis';
+btn.innerHTML = "Run Analysis";
+showAffirmation("received a deep mirror analysis of their patterns and inner world");
+});
 }
 
-async function askMirror() {
-const input = document.getElementById('ask-input');
-const q = input.value.trim();
+function askMirror() {
+var input = document.getElementById("ask-input");
+var q = input.value.trim();
 if (!q) return;
-input.value = '';
-
-const entryContext = entries.length ? '\n\nUser journal context:\n' + entries.slice(-5).map(e=>e.text).join('\n---\n') : '';
-conversation.push({role:'user',content:q});
+input.value = "";
+var entryContext = entries.length ? "\n\nUser journal context:\n" + entries.slice(-5).map(function(e) { return e.text; }).join("\n---\n") : "";
+conversation.push({role:"user", content:q});
 renderConvo();
-
-const result = await callMirror(conversation, 'You have access to the user\'s recent journaling.' + entryContext);
-conversation.push({role:'assistant',content:result});
+callMirror(conversation, "You have access to the user's recent journaling." + entryContext).then(function(result) {
+conversation.push({role:"assistant", content:result});
 renderConvo();
+});
 }
 
 function renderConvo() {
-const wrap = document.getElementById('convo-wrap');
-wrap.innerHTML = conversation.map(msg => `
-<div class="convo-msg ${msg.role}">
-<div class="convo-role" style="color:${msg.role==='user'?'#C0A060':'rgba(155,89,182,0.8)'}">
-${msg.role==='user'?'YOU':'THE MIRROR ◈'}
-</div>
-<div class="convo-content">${msg.content}</div>
-</div>`).join('');
+var wrap = document.getElementById("convo-wrap");
+var html = "";
+conversation.forEach(function(msg) {
+html += '<div class="convo-msg ' + msg.role + '">';
+html += '<div class="convo-role" style="color:' + (msg.role === "user" ? "#C0A060" : "rgba(155,89,182,0.8)") + '">';
+html += msg.role === "user" ? "YOU" : "THE MIRROR";
+html += "</div>";
+html += '<div class="convo-content">' + msg.content + "</div>";
+html += "</div>";
+});
+wrap.innerHTML = html;
 wrap.scrollTop = wrap.scrollHeight;
 }
 
-function clearConvo() { conversation = []; renderConvo(); }
+function clearConvo() {
+conversation = [];
+renderConvo();
+}
 
-async function decodePatterns() {
+function decodePatterns() {
 if (entries.length < 2) return;
-const btn = document.getElementById('patterns-btn');
-const out = document.getElementById('patterns-output');
+var btn = document.getElementById("patterns-btn");
+var out = document.getElementById("patterns-output");
 btn.disabled = true;
 btn.innerHTML = '<span class="spinner"></span> Mapping Patterns...';
-out.innerHTML = '';
+out.innerHTML = "";
 
-const entryText = entries.map(e=>`[${e.dateLabel}${e.mood?' | '+e.mood:''}]: ${e.text}`).join('\n\n');
-const result = await callMirror([{role:'user',content:`Analyze these entries for deep behavioral and emotional patterns:\n\n${entryText}\n\nReturn ONLY a JSON object:\n{"emotional_patterns":[{"pattern":"...","evidence":"...","insight":"..."}],"relationship_dynamics":[{"pattern":"...","evidence":"...","insight":"..."}],"energy_patterns":[{"pattern":"...","evidence":"...","insight":"..."}],"growth_signals":[{"observation":"...","meaning":"..."}],"shadow_themes":[{"theme":"...","manifestation":"..."}]}\nBe specific, grounded in actual text. Max 2-3 items per category. Return ONLY valid JSON.`}]);
+var entryText = entries.map(function(e) {
+return "[" + e.dateLabel + (e.mood ? " | " + e.mood : "") + "]: " + e.text;
+}).join("\n\n");
 
+var prompt = "Analyze these entries for deep behavioral and emotional patterns:\n\n" + entryText + "\n\nReturn ONLY a JSON object with keys: emotional_patterns, relationship_dynamics, energy_patterns, growth_signals, shadow_themes. Each is an array. emotional_patterns/relationship_dynamics/energy_patterns items have: pattern, evidence, insight. growth_signals items have: observation, meaning. shadow_themes items have: theme, manifestation. Max 2-3 items per category. Return ONLY valid JSON, nothing else.";
+
+callMirror([{role:"user", content:prompt}]).then(function(result) {
 try {
-const clean = result.replace(/```json|```/g,'').trim();
-const data = JSON.parse(clean);
-const sections = [
-{key:'emotional_patterns',label:'Emotional Patterns',color:'#9B59B6',fields:['pattern','evidence','insight']},
-{key:'relationship_dynamics',label:'Relationship Dynamics',color:'#C0A060',fields:['pattern','evidence','insight']},
-{key:'energy_patterns',label:'Energy Patterns',color:'#7B4FA0',fields:['pattern','evidence','insight']},
-{key:'growth_signals',label:'Growth Signals',color:'#8BAA6A',fields:['observation','meaning']},
-{key:'shadow_themes',label:'Shadow Themes',color:'#8B3A6A',fields:['theme','manifestation']},
+var clean = result.replace(/```json|```/g, "").trim();
+var data = JSON.parse(clean);
+var sections = [
+{key:"emotional_patterns", label:"Emotional Patterns", color:"#9B59B6", fields:["pattern","evidence","insight"]},
+{key:"relationship_dynamics",label:"Relationship Dynamics", color:"#C0A060", fields:["pattern","evidence","insight"]},
+{key:"energy_patterns", label:"Energy Patterns", color:"#7B4FA0", fields:["pattern","evidence","insight"]},
+{key:"growth_signals", label:"Growth Signals", color:"#8BAA6A", fields:["observation","meaning"]},
+{key:"shadow_themes", label:"Shadow Themes", color:"#8B3A6A", fields:["theme","manifestation"]}
 ];
-out.innerHTML = sections.filter(s=>data[s.key]?.length).map(s=>`
-<div class="pattern-card" style="border-top:3px solid ${s.color}66;border:1px solid ${s.color}22">
-<div class="pattern-header" style="border-bottom:1px solid ${s.color}15">
-<span class="pattern-label" style="color:${s.color}">${s.label}</span>
-</div>
-<div class="pattern-body">
-${data[s.key].map(item=>`
-<div>
-<div class="pattern-item-title">${item[s.fields[0]]||''}</div>
-${s.fields[1]?`<div class="pattern-evidence">↳ ${item[s.fields[1]]||''}</div>`:''}
-${s.fields[2]&&item[s.fields[2]]?`<div class="pattern-insight" style="color:${s.color};border-left-color:${s.color}44">${item[s.fields[2]]}</div>`:''}
-</div>`).join('')}
-</div>
-</div>`).join('');
-} catch {
+var html = "";
+sections.forEach(function(s) {
+if (!data[s.key] || !data[s.key].length) return;
+html += '<div class="pattern-card" style="border:1px solid ' + s.color + '22;border-top:3px solid ' + s.color + '66">';
+html += '<div class="pattern-header" style="border-bottom:1px solid ' + s.color + '15">';
+html += '<span class="pattern-label" style="color:' + s.color + '">' + s.label + "</span>";
+html += "</div>";
+html += '<div class="pattern-body">';
+data[s.key].forEach(function(item) {
+html += "<div>";
+html += '<div class="pattern-item-title">' + (item[s.fields[0]] || "") + "</div>";
+if (s.fields[1] && item[s.fields[1]]) {
+html += '<div class="pattern-evidence">&#8627; ' + item[s.fields[1]] + "</div>";
+}
+if (s.fields[2] && item[s.fields[2]]) {
+html += '<div class="pattern-insight" style="color:' + s.color + ';border-left-color:' + s.color + '44">' + item[s.fields[2]] + "</div>";
+}
+html += "</div>";
+});
+html += "</div></div>";
+});
+out.innerHTML = html;
+} catch(err) {
 out.innerHTML = '<div class="empty-state">Could not parse pattern data. Try again.</div>';
 }
 btn.disabled = false;
-btn.innerHTML = '♛ Decode My Patterns';
+btn.innerHTML = "&#9819; Decode My Patterns";
+});
 }
 
-async function analyzeEnergy() {
-const moodEntries = entries.filter(e=>e.mood);
+function analyzeEnergy() {
+var moodEntries = entries.filter(function(e) { return e.mood; });
 if (moodEntries.length < 2) return;
-const btn = document.getElementById('energy-btn');
-const out = document.getElementById('energy-output');
+var btn = document.getElementById("energy-btn");
+var out = document.getElementById("energy-output");
 btn.disabled = true;
 btn.innerHTML = '<span class="spinner"></span> Analyzing Energy...';
-out.innerHTML = '';
+out.innerHTML = "";
 
-const moodLog = moodEntries.map(e=>`${e.dateLabel}: ${e.mood} — "${e.text.slice(0,120)}"`).join('\n');
-const result = await callMirror([{role:'user',content:`Analyze this energy tracking data:\n\n${moodLog}\n\nProvide: 1) Dominant energy pattern 2) What correlates with each state 3) One practical insight about protecting their energy 4) One uncomfortable truth. Under 200 words. Specific to their actual data.`}]);
+var moodLog = moodEntries.map(function(e) {
+return e.dateLabel + ": " + e.mood + " - " + e.text.slice(0, 120);
+}).join("\n");
 
-out.className = 'analysis-result';
+callMirror([{role:"user", content:"Analyze this energy tracking data:\n\n" + moodLog + "\n\nProvide: 1) Dominant energy pattern 2) What correlates with each state 3) One practical insight about protecting their energy 4) One uncomfortable truth. Under 200 words. Specific to their actual data."}]).then(function(result) {
+out.className = "analysis-result";
 out.textContent = result;
 btn.disabled = false;
-btn.innerHTML = 'Read My Energy Patterns';
+btn.innerHTML = "Read My Energy Patterns";
+});
 }
 
 // Init
