@@ -21,6 +21,9 @@ button{cursor:pointer}
 @keyframes spin{to{transform:rotate(360deg)}}
 @keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
 @keyframes slideDown{from{opacity:1;transform:translateY(0)}to{opacity:0;transform:translateY(20px)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes mirrorReveal{from{opacity:0;transform:translateY(16px) scale(0.98)}to{opacity:1;transform:translateY(0) scale(1)}}
+
 .affirmation-toast{
 position:fixed;bottom:32px;left:50%;transform:translateX(-50%);
 background:linear-gradient(135deg,rgba(60,20,90,0.97),rgba(40,15,70,0.97));
@@ -30,11 +33,11 @@ box-shadow:0 8px 40px rgba(0,0,0,0.5),0 0 60px rgba(155,89,182,0.15);
 z-index:999;animation:slideUp .4s ease forwards;
 }
 .affirmation-toast.hiding{animation:slideDown .4s ease forwards}
-.affirmation-crown{font-size:18px;margin-bottom:8px;color:var(--gold)}
-.affirmation-text{font-family:'Playfair Display',serif;font-size:15px;font-style:italic;line-height:1.6;color:var(--text)}
-.affirmation-close{margin-top:12px;font-size:9px;color:var(--muted);letter-spacing:.14em;font-family:'DM Mono',monospace;cursor:pointer;text-transform:uppercase}
-.affirmation-close:hover{color:var(--gold)}
-@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.affirmation-crown{font-size:18px;margin-bottom:8px;color:var(–gold)}
+.affirmation-text{font-family:‘Playfair Display’,serif;font-size:15px;font-style:italic;line-height:1.6;color:var(–text)}
+.affirmation-close{margin-top:12px;font-size:9px;color:var(–muted);letter-spacing:.14em;font-family:‘DM Mono’,monospace;cursor:pointer;text-transform:uppercase}
+.affirmation-close:hover{color:var(–gold)}
+
 ::-webkit-scrollbar{width:3px}
 ::-webkit-scrollbar-thumb{background:rgba(192,160,96,0.15);border-radius:2px}
 
@@ -68,7 +71,7 @@ main{max-width:720px;margin:0 auto;padding:32px 28px 80px}
 .prompt-box{
 background:rgba(192,160,96,0.05);border:1px solid rgba(192,160,96,0.2);
 border-left:3px solid var(–gold);border-radius:0 10px 10px 0;
-padding:14px 18px;margin-bottom:20px;display:flex;justify-content:space-between;align-items:center;gap:12;
+padding:14px 18px;margin-bottom:20px;display:flex;justify-content:space-between;align-items:center;gap:12px;
 }
 .prompt-text{font-size:13px;font-style:italic;line-height:1.5;flex:1}
 
@@ -114,6 +117,67 @@ border-radius:10px;padding:14px 16px;margin-bottom:10px;
 .entry-preview{font-size:13px;color:rgba(232,224,208,0.65);line-height:1.6;
 overflow:hidden;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical}
 
+/* ── MIRROR RESPONSE CARD (inline, post-save) ── */
+.mirror-response-card{
+background:linear-gradient(160deg,rgba(111,47,130,0.12),rgba(60,20,90,0.08));
+border:1px solid rgba(155,89,182,0.28);border-radius:14px;
+padding:24px 26px;margin-top:24px;
+animation:mirrorReveal .6s cubic-bezier(.22,1,.36,1) forwards;
+}
+.mirror-response-header{
+display:flex;align-items:center;gap:10px;margin-bottom:18px;
+padding-bottom:14px;border-bottom:1px solid rgba(155,89,182,0.15);
+}
+.mirror-crown-icon{
+width:36px;height:36px;border-radius:50%;flex-shrink:0;
+background:radial-gradient(circle,rgba(155,89,182,0.35),rgba(111,47,130,0.1));
+border:1px solid rgba(155,89,182,0.35);
+display:flex;align-items:center;justify-content:center;font-size:15px;
+}
+.mirror-response-label{font-size:10px;letter-spacing:.2em;color:var(–gold);font-family:‘DM Mono’,monospace;text-transform:uppercase}
+.mirror-response-sublabel{font-size:11px;color:rgba(232,224,208,0.35);font-family:‘DM Mono’,monospace;margin-top:2px}
+
+.mirror-message{
+font-size:15px;line-height:1.85;color:rgba(232,224,208,0.9);
+font-style:italic;margin-bottom:20px;
+font-family:‘Playfair Display’,serif;
+}
+
+.mirror-insight-row{
+display:flex;flex-direction:column;gap:10px;margin-bottom:20px;
+}
+.mirror-insight-item{
+display:flex;gap:12px;align-items:flex-start;
+background:rgba(255,255,255,0.02);border:1px solid rgba(155,89,182,0.1);
+border-radius:8px;padding:12px 14px;
+}
+.mirror-insight-icon{color:var(–plum);font-size:13px;margin-top:1px;flex-shrink:0;width:16px;text-align:center}
+.mirror-insight-label{font-size:9px;letter-spacing:.18em;color:rgba(192,160,96,0.5);font-family:‘DM Mono’,monospace;text-transform:uppercase;margin-bottom:4px}
+.mirror-insight-value{font-size:13px;color:rgba(232,224,208,0.8);line-height:1.65}
+
+.mirror-quiet-q{
+background:rgba(192,160,96,0.04);border:1px solid rgba(192,160,96,0.15);
+border-left:3px solid rgba(192,160,96,0.4);border-radius:0 8px 8px 0;
+padding:14px 16px;margin-bottom:20px;
+}
+.mirror-quiet-q-label{font-size:9px;letter-spacing:.18em;color:var(–gold);font-family:‘DM Mono’,monospace;text-transform:uppercase;margin-bottom:6px}
+.mirror-quiet-q-text{font-size:14px;color:rgba(232,224,208,0.85);line-height:1.7;font-style:italic}
+
+/* Feedback */
+.mirror-feedback{display:flex;align-items:center;gap:14px;padding-top:16px;border-top:1px solid rgba(155,89,182,0.1)}
+.mirror-feedback-label{font-size:10px;letter-spacing:.14em;color:rgba(232,224,208,0.3);font-family:‘DM Mono’,monospace;text-transform:uppercase;flex:1}
+.feedback-btn{
+background:rgba(255,255,255,0.04);border:1px solid rgba(192,160,96,0.2);
+color:rgba(232,224,208,0.6);border-radius:20px;padding:7px 18px;
+font-size:12px;font-family:‘DM Mono’,monospace;letter-spacing:.08em;
+transition:all .18s;display:inline-flex;align-items:center;gap:6px;
+}
+.feedback-btn:hover{background:rgba(192,160,96,0.08);border-color:rgba(192,160,96,0.5);color:var(–text)}
+.feedback-btn.selected-yes{background:rgba(155,89,182,0.2);border-color:var(–plum);color:var(–plum)}
+.feedback-btn.selected-no{background:rgba(192,160,96,0.08);border-color:rgba(192,160,96,0.4);color:rgba(192,160,96,0.7)}
+.feedback-response{font-size:12px;color:var(–plum);font-family:‘DM Mono’,monospace;font-style:italic;animation:fadeUp .3s ease}
+
+/* Mirror tab */
 .mirror-box{
 background:rgba(155,89,182,0.06);border:1px solid rgba(155,89,182,0.2);
 border-radius:14px;padding:20px 22px;margin-bottom:28px;
@@ -218,10 +282,10 @@ font-family:‘DM Mono’,monospace;letter-spacing:.16em;
 </header>
 
 <nav>
-<button class="tab-btn active" onclick="switchTab('journal')">◎ Journal</button>
-<button class="tab-btn" onclick="switchTab('mirror')">◈ The Mirror</button>
-<button class="tab-btn" onclick="switchTab('patterns')">◉ Patterns</button>
-<button class="tab-btn" onclick="switchTab('energy')">◇ Energy Map</button>
+<button class="tab-btn active" onclick="switchTab('journal',this)">◎ Journal</button>
+<button class="tab-btn" onclick="switchTab('mirror',this)">◈ The Mirror</button>
+<button class="tab-btn" onclick="switchTab('patterns',this)">◉ Patterns</button>
+<button class="tab-btn" onclick="switchTab('energy',this)">◇ Energy Map</button>
 </nav>
 
 <main>
@@ -242,7 +306,14 @@ font-family:‘DM Mono’,monospace;letter-spacing:.16em;
 
 <textarea class="journal" id="journal-input" rows="7" placeholder="Write whatever is present. No editing, no performance. This is yours."></textarea>
 
-<button class="primary-btn" onclick="saveEntry()">Save Entry ♛</button>
+<div style="display:flex;align-items:center;gap:12px">
+<button class="primary-btn" id="save-btn" onclick="saveEntry()">Save Entry ♛</button>
+<span id="save-status" style="font-size:11px;color:rgba(232,224,208,0.3);font-family:'DM Mono',monospace;letter-spacing:.08em"></span>
+</div>
+
+<!-- Mirror response fires here immediately after save -->
+
+<div id="mirror-inline" style="display:none"></div>
 
 <div id="past-entries" style="margin-top:36px"></div>
 </div>
@@ -304,6 +375,8 @@ font-family:‘DM Mono’,monospace;letter-spacing:.16em;
 
 <script>
 var SYSTEM = "You are the Mirror, the self-awareness intelligence at the heart of Quietly Krowned. Philosophy: Quiet power. Deep awareness. Intentional living. You are NOT a therapist. You are a reflective intelligence that helps users see their own patterns clearly. Voice: Precise, warm, psychologically grounded. Never preachy. Speak like someone who has done serious inner work. Use psychology, attachment theory, Jungian archetypes when relevant. Never use buzzwords shallowly. Tone: bell hooks meets Carl Jung meets someone who grew up watching people carefully and took notes.";
+
+var MIRROR_ENTRY_SYSTEM = SYSTEM + "\n\nWhen given a single journal entry, respond ONLY with valid JSON, no preamble, no markdown fences:\n{\"emotional_tone\":\"A single evocative phrase (e.g. quiet tension beneath resolve)\",\"hidden_pattern\":\"One sentence naming the deeper pattern at work\",\"reflection_question\":\"One question that opens a door, not closes one\",\"mirror_message\":\"2-3 sentences spoken warmly and directly. Use 'you'. Poetic but precise. Never prescriptive.\"}";
 
 var AFFIRMATIONS = [
 "You are allowed to take up space, quietly and completely.",
@@ -384,6 +457,19 @@ document.getElementById("prompt-text").textContent = '"' + PROMPTS[promptIdx] + 
 function saveEntry() {
 var text = document.getElementById("journal-input").value.trim();
 if (!text) return;
+
+var saveBtn = document.getElementById("save-btn");
+var saveStatus = document.getElementById("save-status");
+var mirrorInline = document.getElementById("mirror-inline");
+
+saveBtn.disabled = true;
+saveBtn.innerHTML = '<span class="spinner"></span> Saving...';
+saveStatus.textContent = "";
+
+// Show loading state in mirror inline area
+mirrorInline.style.display = "block";
+mirrorInline.innerHTML = '<div class="mirror-response-card" style="opacity:.6"><div class="mirror-response-header"><div class="mirror-crown-icon">♛</div><div><div class="mirror-response-label">The Mirror Sees</div><div class="mirror-response-sublabel" id="mirror-loading-txt">Reading your entry...</div></div></div><div style="display:flex;align-items:center;gap:10px;padding:10px 0;color:rgba(232,224,208,0.35)"><span class="spinner"></span><span style="font-size:11px;font-family:DM Mono,monospace;letter-spacing:.1em">THE MIRROR IS LISTENING</span></div></div>';
+
 var now = new Date();
 var entry = {
 id: Date.now(),
@@ -392,92 +478,216 @@ mood: selectedMood,
 date: now.toISOString(),
 dateLabel: now.toLocaleDateString("en-US", {month:"short", day:"numeric", year:"numeric"})
 };
+
 entries.push(entry);
+
+// Call Mirror API for inline response
+var moodContext = selectedMood ? "Energy state: " + selectedMood + ".\n" : "";
+var promptContext = "Prompt offered: " + PROMPTS[promptIdx] + ".\n\n";
+
+fetch("https://api.anthropic.com/v1/messages", {
+method: "POST",
+headers: {"Content-Type": "application/json"},
+body: JSON.stringify({
+model: "claude-sonnet-4-20250514",
+max_tokens: 800,
+system: MIRROR_ENTRY_SYSTEM,
+messages: [{role:"user", content: moodContext + promptContext + "Entry:\n" + text}]
+})
+}).then(function(res){ return res.json(); })
+.then(function(data) {
+var raw = data.content ? data.content.map(function(b){return b.text||"";}).join("") : "{}";
+var parsed;
+try {
+parsed = JSON.parse(raw.replace(/```json|```/g,"").trim());
+} catch(e) {
+parsed = {
+emotional_tone: "something deep and real",
+hidden_pattern: "A pattern the Mirror noticed in your words.",
+reflection_question: "What truth are you already aware of but haven't said out loud yet?",
+mirror_message: "The Mirror sees what you wrote, and what you didn't. Sit with this."
+};
+}
+entry.mirror = parsed;
+renderMirrorInline(parsed, entry.id);
+saveBtn.disabled = false;
+saveBtn.innerHTML = "New Entry ♛";
+saveBtn.onclick = function(){ startNewEntry(); };
 document.getElementById("journal-input").value = "";
 selectedMood = null;
-MOODS.forEach(function(m) { toggleMood(null, m.color); });
-promptIdx = Math.floor(Math.random() * PROMPTS.length);
-nextPrompt();
+MOODS.forEach(function(m){ toggleMood(null, m.color); });
 updateStats();
 renderPastEntries();
 renderEnergyBars();
 renderEnergyLog();
 showAffirmation("wrote in their journal and chose to look inward");
+}).catch(function(){
+mirrorInline.innerHTML = '<div class="mirror-response-card"><div style="font-size:12px;color:rgba(232,224,208,0.4);font-family:DM Mono,monospace">The Mirror is quiet right now. Your entry was saved.</div></div>';
+saveBtn.disabled = false;
+saveBtn.innerHTML = "New Entry ♛";
+saveBtn.onclick = function(){ startNewEntry(); };
+updateStats();
+renderPastEntries();
+});
+}
+
+function renderMirrorInline(parsed, entryId) {
+var mirrorInline = document.getElementById("mirror-inline");
+var feedbackId = "fb-" + entryId;
+
+var html = '<div class="mirror-response-card">';
+// Header
+html += '<div class="mirror-response-header">';
+html += '<div class="mirror-crown-icon">♛</div>';
+html += '<div><div class="mirror-response-label">The Mirror Sees</div><div class="mirror-response-sublabel">Your reflection is ready</div></div>';
+html += '</div>';
+
+// Mirror message
+if (parsed.mirror_message) {
+html += '<div class="mirror-message">' + escHtml(parsed.mirror_message) + '</div>';
+}
+
+// Three insights
+html += '<div class="mirror-insight-row">';
+html += '<div class="mirror-insight-item"><div class="mirror-insight-icon">◇</div><div><div class="mirror-insight-label">Emotional Tone</div><div class="mirror-insight-value">' + escHtml(parsed.emotional_tone||"") + '</div></div></div>';
+html += '<div class="mirror-insight-item"><div class="mirror-insight-icon">◈</div><div><div class="mirror-insight-label">Hidden Pattern</div><div class="mirror-insight-value">' + escHtml(parsed.hidden_pattern||"") + '</div></div></div>';
+html += '</div>';
+
+// Quiet question
+if (parsed.reflection_question) {
+html += '<div class="mirror-quiet-q"><div class="mirror-quiet-q-label">Quiet Question</div><div class="mirror-quiet-q-text">' + escHtml(parsed.reflection_question) + '</div></div>';
+}
+
+// Feedback
+html += '<div class="mirror-feedback">';
+html += '<div class="mirror-feedback-label">Did the Mirror resonate?</div>';
+html += '<div id="' + feedbackId + '-btns" style="display:flex;gap:8px">';
+html += '<button class="feedback-btn" id="' + feedbackId + '-yes" onclick="submitFeedback(\'' + feedbackId + '\',true)">👍 Yes</button>';
+html += '<button class="feedback-btn" id="' + feedbackId + '-no" onclick="submitFeedback(\'' + feedbackId + '\',false)">👎 Not really</button>';
+html += '</div>';
+html += '<div id="' + feedbackId + '-resp" style="display:none" class="feedback-response"></div>';
+html += '</div>';
+
+html += '</div>'; // end card
+mirrorInline.innerHTML = html;
+mirrorInline.style.display = "block";
+// scroll to mirror
+setTimeout(function(){ mirrorInline.scrollIntoView({behavior:"smooth",block:"nearest"}); }, 100);
+}
+
+function submitFeedback(feedbackId, resonated) {
+var btns = document.getElementById(feedbackId + "-btns");
+var resp = document.getElementById(feedbackId + "-resp");
+var yesBtn = document.getElementById(feedbackId + "-yes");
+var noBtn = document.getElementById(feedbackId + "-no");
+
+if (resonated) {
+yesBtn.classList.add("selected-yes");
+noBtn.style.opacity = "0.3";
+} else {
+noBtn.classList.add("selected-no");
+yesBtn.style.opacity = "0.3";
+}
+yesBtn.disabled = true;
+noBtn.disabled = true;
+
+resp.style.display = "block";
+resp.textContent = resonated
+? "The Mirror holds your truth gently. ♛"
+: "The Mirror will learn to see you better.";
+}
+
+function startNewEntry() {
+document.getElementById("mirror-inline").style.display = "none";
+document.getElementById("mirror-inline").innerHTML = "";
+var saveBtn = document.getElementById("save-btn");
+saveBtn.innerHTML = "Save Entry ♛";
+saveBtn.onclick = function(){ saveEntry(); };
+saveBtn.disabled = false;
+promptIdx = Math.floor(Math.random() * PROMPTS.length);
+document.getElementById("prompt-text").textContent = '"' + PROMPTS[promptIdx] + '"';
+document.getElementById("journal-input").focus();
+window.scrollTo({top:0, behavior:"smooth"});
+}
+
+function escHtml(str) {
+return String(str).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
 }
 
 function updateStats() {
 document.getElementById("entry-count").textContent = entries.length;
-var days = new Set(entries.map(function(e) { return new Date(e.date).toDateString(); })).size;
+var days = new Set(entries.map(function(e){return new Date(e.date).toDateString();})).size;
 document.getElementById("day-count").textContent = days;
-document.getElementById("mirror-count").textContent = entries.length + " " + (entries.length === 1 ? "entry" : "entries") + " in memory";
+document.getElementById("mirror-count").textContent = entries.length + " " + (entries.length===1?"entry":"entries") + " in memory";
 }
 
 function renderPastEntries() {
 var wrap = document.getElementById("past-entries");
 if (!entries.length) { wrap.innerHTML = ""; return; }
-var recent = entries.slice().reverse().slice(0, 5);
-var html = '<div class="field-label">Past Entries &mdash; ' + entries.length + " logged</div>";
+var recent = entries.slice().reverse().slice(0,5);
+var html = '<div class="field-label" style="margin-top:36px">Past Entries &mdash; ' + entries.length + " logged</div>";
 recent.forEach(function(e) {
-var mood = MOODS.find(function(m) { return m.id === e.mood; });
+var mood = MOODS.find(function(m){return m.id===e.mood;});
 html += '<div class="entry-card">';
 html += '<div class="entry-meta">';
 html += '<span class="entry-date">' + e.dateLabel + "</span>";
 if (mood) html += '<span class="entry-mood-tag">' + mood.label + "</span>";
 html += "</div>";
-html += '<div class="entry-preview">' + e.text + "</div>";
+html += '<div class="entry-preview">' + escHtml(e.text) + "</div>";
+if (e.mirror && e.mirror.reflection_question) {
+html += '<div style="margin-top:8px;font-size:11px;color:rgba(155,89,182,0.6);font-style:italic;font-family:Georgia,serif">◉ ' + escHtml(e.mirror.reflection_question) + '</div>';
+}
 html += "</div>";
 });
 wrap.innerHTML = html;
 }
 
 function renderEnergyBars() {
-var moodEntries = entries.filter(function(e) { return e.mood; });
+var moodEntries = entries.filter(function(e){return e.mood;});
 var bars = document.getElementById("energy-bars");
 if (!moodEntries.length) {
 bars.innerHTML = '<div class="empty-state">Log energy states in your journal entries to build your map.</div>';
 return;
 }
 var counts = {};
-MOODS.forEach(function(m) {
-counts[m.id] = moodEntries.filter(function(e) { return e.mood === m.id; }).length;
-});
+MOODS.forEach(function(m){counts[m.id]=moodEntries.filter(function(e){return e.mood===m.id;}).length;});
 var max = Math.max.apply(null, Object.values(counts).concat([1]));
 var html = "";
 MOODS.forEach(function(m) {
-var pct = (counts[m.id] / max) * 100;
+var pct = (counts[m.id]/max)*100;
 html += '<div class="bar-row">';
-html += '<div class="bar-label" style="color:' + m.color + '">' + m.label + "</div>";
-html += '<div class="bar-track"><div class="bar-fill" style="width:' + pct + '%;background:linear-gradient(90deg,' + m.color + "88," + m.color + ')"></div></div>';
-html += '<div class="bar-count">' + counts[m.id] + "</div>";
+html += '<div class="bar-label" style="color:'+m.color+'">'+m.label+"</div>";
+html += '<div class="bar-track"><div class="bar-fill" style="width:'+pct+'%;background:linear-gradient(90deg,'+m.color+'88,'+m.color+')"></div></div>';
+html += '<div class="bar-count">'+counts[m.id]+"</div>";
 html += "</div>";
 });
 bars.innerHTML = html;
 }
 
 function renderEnergyLog() {
-var moodEntries = entries.filter(function(e) { return e.mood; });
+var moodEntries = entries.filter(function(e){return e.mood;});
 var wrap = document.getElementById("energy-log-wrap");
 if (!moodEntries.length) { wrap.innerHTML = ""; return; }
-var recent = moodEntries.slice().reverse().slice(0, 7);
+var recent = moodEntries.slice().reverse().slice(0,7);
 var html = '<div class="field-label">Recent Energy Log</div><div class="energy-log">';
 recent.forEach(function(e) {
-var m = MOODS.find(function(s) { return s.id === e.mood; });
+var m = MOODS.find(function(s){return s.id===e.mood;});
 html += '<div class="energy-log-item">';
-html += '<div class="energy-dot" style="background:' + m.color + '"></div>';
-html += '<span class="energy-date">' + e.dateLabel + "</span>";
-html += '<span class="energy-state-label" style="color:' + m.color + '">' + m.label + "</span>";
-html += '<span class="energy-excerpt">' + e.text.slice(0, 60) + "...</span>";
+html += '<div class="energy-dot" style="background:'+m.color+'"></div>';
+html += '<span class="energy-date">'+e.dateLabel+"</span>";
+html += '<span class="energy-state-label" style="color:'+m.color+'">'+m.label+"</span>";
+html += '<span class="energy-excerpt">'+escHtml(e.text.slice(0,60))+"...</span>";
 html += "</div>";
 });
 html += "</div>";
 wrap.innerHTML = html;
 }
 
-function switchTab(id) {
-document.querySelectorAll(".tab-content").forEach(function(t) { t.classList.remove("active"); });
-document.querySelectorAll(".tab-btn").forEach(function(b) { b.classList.remove("active"); });
-document.getElementById("tab-" + id).classList.add("active");
-event.target.classList.add("active");
+function switchTab(id, btnEl) {
+document.querySelectorAll(".tab-content").forEach(function(t){t.classList.remove("active");});
+document.querySelectorAll(".tab-btn").forEach(function(b){b.classList.remove("active");});
+document.getElementById("tab-"+id).classList.add("active");
+if (btnEl) btnEl.classList.add("active");
 }
 
 function callMirror(messages, extra) {
@@ -488,42 +698,33 @@ system: SYSTEM + (extra ? "\n\n" + extra : ""),
 messages: messages
 };
 return fetch("https://api.anthropic.com/v1/messages", {
-method: "POST",
-headers: {"Content-Type": "application/json"},
-body: JSON.stringify(body)
-}).then(function(res) {
-return res.json();
-}).then(function(d) {
-return d.content ? d.content.map(function(b) { return b.text || ""; }).join("") : "";
-});
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify(body)
+}).then(function(res){return res.json();})
+.then(function(d){return d.content?d.content.map(function(b){return b.text||"";}).join(""):"";});
 }
 
 function showAffirmation(context) {
 var toast = document.getElementById("affirmation-toast");
-var fallback = AFFIRMATIONS[Math.floor(Math.random() * AFFIRMATIONS.length)];
+var fallback = AFFIRMATIONS[Math.floor(Math.random()*AFFIRMATIONS.length)];
 toast.style.display = "block";
 toast.className = "affirmation-toast";
 toast.innerHTML = '<div class="affirmation-crown">&#9819;</div><div class="affirmation-text" id="affirmation-msg">...</div><div class="affirmation-close" onclick="closeAffirmation()">tap to close</div>';
 
-var prompt = "Write one short affirmation (1-2 sentences, max 25 words) for someone who just " + context + ". Astrology meets psychology tone. Grounded, poetic, empowering. No cliches. Quiet power energy. Return only the affirmation, no quotes, no preamble.";
-
+var prompt = "Write one short affirmation (1-2 sentences, max 25 words) for someone who just "+context+". Astrology meets psychology tone. Grounded, poetic, empowering. No cliches. Quiet power energy. Return only the affirmation, no quotes, no preamble.";
 fetch("https://api.anthropic.com/v1/messages", {
-method: "POST",
-headers: {"Content-Type": "application/json"},
-body: JSON.stringify({
-model: "claude-sonnet-4-20250514",
-max_tokens: 80,
-messages: [{role: "user", content: prompt}]
-})
-}).then(function(res) {
-return res.json();
-}).then(function(data) {
-var msg = (data.content && data.content[0] && data.content[0].text) ? data.content[0].text.trim() : fallback;
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:80,messages:[{role:"user",content:prompt}]})
+}).then(function(res){return res.json();})
+.then(function(data){
+var msg = (data.content&&data.content[0]&&data.content[0].text)?data.content[0].text.trim():fallback;
 var el = document.getElementById("affirmation-msg");
-if (el) el.textContent = msg;
-}).catch(function() {
+if(el) el.textContent = msg;
+}).catch(function(){
 var el = document.getElementById("affirmation-msg");
-if (el) el.textContent = fallback;
+if(el) el.textContent = fallback;
 });
 
 clearTimeout(window._affTimer);
@@ -533,10 +734,7 @@ window._affTimer = setTimeout(closeAffirmation, 7000);
 function closeAffirmation() {
 var toast = document.getElementById("affirmation-toast");
 toast.classList.add("hiding");
-setTimeout(function() {
-toast.style.display = "none";
-toast.classList.remove("hiding");
-}, 400);
+setTimeout(function(){toast.style.display="none";toast.classList.remove("hiding");},400);
 }
 
 function runAnalysis() {
@@ -548,11 +746,11 @@ btn.innerHTML = '<span class="spinner"></span> Reading...';
 out.className = "";
 out.innerHTML = '<div style="display:flex;align-items:center;gap:10px;color:rgba(232,224,208,0.4)"><span class="spinner"></span><span style="font-size:11px;letter-spacing:.1em">THE MIRROR IS READING...</span></div>';
 
-var entryText = entries.slice(-10).map(function(e, i) {
-return "Entry " + (i+1) + " (" + e.dateLabel + (e.mood ? ", feeling " + e.mood : "") + "): " + e.text;
+var entryText = entries.slice(-10).map(function(e,i){
+return "Entry "+(i+1)+" ("+e.dateLabel+(e.mood?", feeling "+e.mood:"")+"):\n"+e.text;
 }).join("\n\n---\n\n");
 
-callMirror([{role:"user", content:"Analyze these journal entries:\n\n" + entryText + "\n\nGive a Mirror Analysis: 1) ONE key pattern (specific), 2) ONE emotional tone observation, 3) ONE insight about what is underneath the surface, 4) ONE precise reflection question to close. Under 300 words. Be a mirror, not a cheerleader."}]).then(function(result) {
+callMirror([{role:"user",content:"Analyze these journal entries:\n\n"+entryText+"\n\nGive a Mirror Analysis: 1) ONE key pattern (specific), 2) ONE emotional tone observation, 3) ONE insight about what is underneath the surface, 4) ONE precise reflection question to close. Under 300 words. Be a mirror, not a cheerleader."}]).then(function(result){
 out.className = "insight-text";
 out.textContent = result;
 btn.disabled = false;
@@ -566,11 +764,11 @@ var input = document.getElementById("ask-input");
 var q = input.value.trim();
 if (!q) return;
 input.value = "";
-var entryContext = entries.length ? "\n\nUser journal context:\n" + entries.slice(-5).map(function(e) { return e.text; }).join("\n---\n") : "";
-conversation.push({role:"user", content:q});
+var entryContext = entries.length ? "\n\nUser journal context:\n"+entries.slice(-5).map(function(e){return e.text;}).join("\n---\n") : "";
+conversation.push({role:"user",content:q});
 renderConvo();
-callMirror(conversation, "You have access to the user's recent journaling." + entryContext).then(function(result) {
-conversation.push({role:"assistant", content:result});
+callMirror(conversation,"You have access to the user's recent journaling."+entryContext).then(function(result){
+conversation.push({role:"assistant",content:result});
 renderConvo();
 });
 }
@@ -578,12 +776,12 @@ renderConvo();
 function renderConvo() {
 var wrap = document.getElementById("convo-wrap");
 var html = "";
-conversation.forEach(function(msg) {
-html += '<div class="convo-msg ' + msg.role + '">';
-html += '<div class="convo-role" style="color:' + (msg.role === "user" ? "#C0A060" : "rgba(155,89,182,0.8)") + '">';
-html += msg.role === "user" ? "YOU" : "THE MIRROR";
+conversation.forEach(function(msg){
+html += '<div class="convo-msg '+msg.role+'">';
+html += '<div class="convo-role" style="color:'+(msg.role==="user"?"#C0A060":"rgba(155,89,182,0.8)")+'">';
+html += msg.role==="user"?"YOU":"THE MIRROR";
 html += "</div>";
-html += '<div class="convo-content">' + msg.content + "</div>";
+html += '<div class="convo-content">'+escHtml(msg.content)+"</div>";
 html += "</div>";
 });
 wrap.innerHTML = html;
@@ -603,15 +801,15 @@ btn.disabled = true;
 btn.innerHTML = '<span class="spinner"></span> Mapping Patterns...';
 out.innerHTML = "";
 
-var entryText = entries.map(function(e) {
-return "[" + e.dateLabel + (e.mood ? " | " + e.mood : "") + "]: " + e.text;
+var entryText = entries.map(function(e){
+return "["+e.dateLabel+(e.mood?" | "+e.mood:"")+"]:\n"+e.text;
 }).join("\n\n");
 
-var prompt = "Analyze these entries for deep behavioral and emotional patterns:\n\n" + entryText + "\n\nReturn ONLY a JSON object with keys: emotional_patterns, relationship_dynamics, energy_patterns, growth_signals, shadow_themes. Each is an array. emotional_patterns/relationship_dynamics/energy_patterns items have: pattern, evidence, insight. growth_signals items have: observation, meaning. shadow_themes items have: theme, manifestation. Max 2-3 items per category. Return ONLY valid JSON, nothing else.";
+var prompt = "Analyze these entries for deep behavioral and emotional patterns:\n\n"+entryText+"\n\nReturn ONLY a JSON object with keys: emotional_patterns, relationship_dynamics, energy_patterns, growth_signals, shadow_themes. Each is an array. emotional_patterns/relationship_dynamics/energy_patterns items have: pattern, evidence, insight. growth_signals items have: observation, meaning. shadow_themes items have: theme, manifestation. Max 2-3 items per category. Return ONLY valid JSON, nothing else.";
 
-callMirror([{role:"user", content:prompt}]).then(function(result) {
+callMirror([{role:"user",content:prompt}]).then(function(result){
 try {
-var clean = result.replace(/```json|```/g, "").trim();
+var clean = result.replace(/```json|```/g,"").trim();
 var data = JSON.parse(clean);
 var sections = [
 {key:"emotional_patterns", label:"Emotional Patterns", color:"#9B59B6", fields:["pattern","evidence","insight"]},
@@ -621,22 +819,16 @@ var sections = [
 {key:"shadow_themes", label:"Shadow Themes", color:"#8B3A6A", fields:["theme","manifestation"]}
 ];
 var html = "";
-sections.forEach(function(s) {
-if (!data[s.key] || !data[s.key].length) return;
-html += '<div class="pattern-card" style="border:1px solid ' + s.color + '22;border-top:3px solid ' + s.color + '66">';
-html += '<div class="pattern-header" style="border-bottom:1px solid ' + s.color + '15">';
-html += '<span class="pattern-label" style="color:' + s.color + '">' + s.label + "</span>";
-html += "</div>";
+sections.forEach(function(s){
+if (!data[s.key]||!data[s.key].length) return;
+html += '<div class="pattern-card" style="border:1px solid '+s.color+'22;border-top:3px solid '+s.color+'66">';
+html += '<div class="pattern-header" style="border-bottom:1px solid '+s.color+'15"><span class="pattern-label" style="color:'+s.color+'">'+s.label+"</span></div>";
 html += '<div class="pattern-body">';
-data[s.key].forEach(function(item) {
+data[s.key].forEach(function(item){
 html += "<div>";
-html += '<div class="pattern-item-title">' + (item[s.fields[0]] || "") + "</div>";
-if (s.fields[1] && item[s.fields[1]]) {
-html += '<div class="pattern-evidence">&#8627; ' + item[s.fields[1]] + "</div>";
-}
-if (s.fields[2] && item[s.fields[2]]) {
-html += '<div class="pattern-insight" style="color:' + s.color + ';border-left-color:' + s.color + '44">' + item[s.fields[2]] + "</div>";
-}
+html += '<div class="pattern-item-title">'+escHtml(item[s.fields[0]]||"")+"</div>";
+if (s.fields[1]&&item[s.fields[1]]) html += '<div class="pattern-evidence">↳ '+escHtml(item[s.fields[1]])+"</div>";
+if (s.fields[2]&&item[s.fields[2]]) html += '<div class="pattern-insight" style="color:'+s.color+';border-left-color:'+s.color+'44">'+escHtml(item[s.fields[2]])+"</div>";
 html += "</div>";
 });
 html += "</div></div>";
@@ -646,12 +838,12 @@ out.innerHTML = html;
 out.innerHTML = '<div class="empty-state">Could not parse pattern data. Try again.</div>';
 }
 btn.disabled = false;
-btn.innerHTML = "&#9819; Decode My Patterns";
+btn.innerHTML = "♛ Decode My Patterns";
 });
 }
 
 function analyzeEnergy() {
-var moodEntries = entries.filter(function(e) { return e.mood; });
+var moodEntries = entries.filter(function(e){return e.mood;});
 if (moodEntries.length < 2) return;
 var btn = document.getElementById("energy-btn");
 var out = document.getElementById("energy-output");
@@ -659,11 +851,11 @@ btn.disabled = true;
 btn.innerHTML = '<span class="spinner"></span> Analyzing Energy...';
 out.innerHTML = "";
 
-var moodLog = moodEntries.map(function(e) {
-return e.dateLabel + ": " + e.mood + " - " + e.text.slice(0, 120);
+var moodLog = moodEntries.map(function(e){
+return e.dateLabel+": "+e.mood+" - "+e.text.slice(0,120);
 }).join("\n");
 
-callMirror([{role:"user", content:"Analyze this energy tracking data:\n\n" + moodLog + "\n\nProvide: 1) Dominant energy pattern 2) What correlates with each state 3) One practical insight about protecting their energy 4) One uncomfortable truth. Under 200 words. Specific to their actual data."}]).then(function(result) {
+callMirror([{role:"user",content:"Analyze this energy tracking data:\n\n"+moodLog+"\n\nProvide: 1) Dominant energy pattern 2) What correlates with each state 3) One practical insight about protecting their energy 4) One uncomfortable truth. Under 200 words. Specific to their actual data."}]).then(function(result){
 out.className = "analysis-result";
 out.textContent = result;
 btn.disabled = false;
