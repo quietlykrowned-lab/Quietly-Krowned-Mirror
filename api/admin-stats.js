@@ -22,7 +22,7 @@ export default async function handler(req, res) {
 
   try {
     const response = await fetch(
-      `${url.replace(/\/$/, "")}/rest/v1/mirror_events?select=participant_id,event,created_at,meta&order=created_at.asc&limit=10000`,
+      `${url.replace(/\/$/, "")}/rest/v1/qk_events?select=participant_id,event_type,challenge_day,created_at.asc&limit=10000`,
       {
         headers: {
           apikey: key,
