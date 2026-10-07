@@ -61,10 +61,10 @@ export default async function handler(req, res) {
         p.lastActive = row.created_at;
       }
 
-      if (row.event === "entry_saved") p.entries++;
-      if (row.event === "mirror_used") p.mirrorUses++;
-      if (row.event === "patterns_used") p.patternUses++;
-      if (row.event === "energy_used") p.energyUses++;
+     if (row.event_type === "entry_saved") p.entries++;
+if (row.event_type === "mirror_used") p.mirrorUses++;
+if (row.event_type === "patterns_used") p.patternUses++;
+if (row.event_type === "energy_used") p.energyUses++;
     }
 
     const people = [...participants.values()].map(p => ({
