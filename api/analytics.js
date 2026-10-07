@@ -11,10 +11,10 @@ export default async function handler(req, res) {
   for (const k of allow) if (Object.prototype.hasOwnProperty.call(meta,k)) safeMeta[k] = meta[k];
   if (!process.env.SUPABASE_URL || !process.env.SUPABASE_SECRET_KEY) return res.status(204).end();
   try {
-    const r = await fetch(`${process.env.SUPABASE_URL}/rest/v1/mirror_events`, {
+    const r = await fetch(`${process.env.SUPABASE_URL}/rest/v1/qk_events`, {
       method:'POST',
-      headers:{'content-type':'application/json','apikey':process.env.SUPABASE_SECRET_KEY,'authorization':`Bearer ${process.env.SUPABASE_SERVICE_ROLE_KEY}`,'prefer':'return=minimal'},
-      body:JSON.stringify({participant_id,event,meta:safeMeta})
+      headers:{'content-type':'application/json','apikey':process.env.SUPABASE_SECRET_KEY,'authorization':`Bearer ${process.env.SUPABASE_SECRET_KEY}`,'prefer':'return=minimal'},
+      body:JSON.stringify({participant_id,event_type:event,challenge_day:Number.isInteger(meta.day) && meta.day >= 1 && meta.day <= 30 ? meta.day : null})
     });
     if(!r.ok) return res.status(502).json({error:'Analytics unavailable'});
     return res.status(204).end();
