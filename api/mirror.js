@@ -39,7 +39,7 @@ export default async function handler(req, res) {
         body: JSON.stringify({
           model:
             process.env.ANTHROPIC_MODEL ||
-            "claude-sonnet-4-20250514",
+            "claude-sonnet-4-6",
           max_tokens,
           ...(system ? { system } : {}),
           messages
