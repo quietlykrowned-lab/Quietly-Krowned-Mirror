@@ -71,16 +71,19 @@ export default async function handler(req, res) {
         providerErrorType: safeType
       });
     }
-
     return res.status(200).json(data);
-
+ 
   } catch (error) {
+    console.error("Mirror diagnostic:", {
+      name: error?.name,
+      message: error?.message,
+      causeCode: error?.cause?.code,
+      causeMessage: error?.cause?.message
+    });
+
     return res.status(500).json({
       error: "Mirror server request failed",
-      errorType:
-        error instanceof TypeError
-          ? "network_or_response_error"
-          : "unexpected_server_error"
+      errorType: "server_exception"
     });
   }
 }
