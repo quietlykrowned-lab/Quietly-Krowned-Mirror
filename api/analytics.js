@@ -16,7 +16,7 @@ export default async function handler(req, res) {
       headers:{'content-type':'application/json','apikey':process.env.SUPABASE_SECRET_KEY,'authorization':`Bearer ${process.env.SUPABASE_SECRET_KEY}`,'prefer':'return=minimal'},
       body:JSON.stringify({participant_id,event_type:event,challenge_day:Number.isInteger(meta.day) && meta.day >= 1 && meta.day <= 30 ? meta.day : null})
     });
-    if(!r.ok) return res.status(502).json({error:'Analytics unavailable'});
+     if (!r.ok) {   const details = await r.json().catch(() => ({}));   return res.status(502).json({     error: "Analytics unavailable",     supabaseStatus: r.status,     supabaseCode: details.code || null,     supabaseMessage: details.message || null   }); }
     return res.status(204).end();
   } catch(e){ return res.status(204).end(); }
 }
